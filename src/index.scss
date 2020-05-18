@@ -1,6 +1,54 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  border: none;
+.report {
+  box-sizing: border-box;
+  padding: 20px;
+  color: #fff;
+  background-color: rgba(6, 0, 51, 1);
+  $space: 10px;
+  $mainColor: #214c46;
+
+  .container {
+    display: flex;
+    height: 100vh;
+
+    &:not(:nth-last-child(1)) {
+      margin-bottom: $space;
+    }
+
+    .left-container,
+    .right-container {
+      flex: 1;
+    }
+
+    .left-container {
+      margin-right: $space;
+    }
+
+    .right-container {
+      display: flex;
+      flex-direction: column;
+
+      .line {
+        display: flex;
+        flex: 1;
+
+        &:not(:nth-last-child(1)) {
+          margin-bottom: $space;
+        }
+
+        .line-report {
+          flex: 1;
+
+          &:not(:nth-last-child(1)) {
+            margin-right: $space;
+          }
+        }
+      }
+    }
+
+    .report-block {
+      box-sizing: border-box;
+      border: 3px solid $mainColor;
+      border-radius: 8px;
+    }
+  }
 }
