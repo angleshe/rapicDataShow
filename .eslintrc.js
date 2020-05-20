@@ -17,6 +17,12 @@ module.exports = {
         allowUnderscorePrefix: true
       }
     ],
-    'comma-dangle': ['error', 'never']
+    'comma-dangle': ['error', 'never'],
+    complexity: [
+      'error',
+      {
+        max: 15
+      }
+    ]
   }
 };

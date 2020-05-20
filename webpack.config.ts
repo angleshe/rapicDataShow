@@ -48,6 +48,30 @@ export default function (env: undefined | string): Configuration | Configuration
     .loader('sass-loader')
     .end()
     .end()
+    .rule('less')
+    .test(/\.css$/)
+    .use('style-loader')
+    .loader('style-loader')
+    .end()
+    .use('css-loader')
+    .loader('css-loader')
+    .end()
+    .use('postcss-loader')
+    .loader('postcss-loader')
+    .end()
+    .end()
+    .rule('font')
+    .test(/\.(eot|woff2?|ttf|svg)$/)
+    .use('url-loader')
+    .loader('url-loader')
+    .options({
+      name: '[name]-[hash:5].min.[ext]',
+      limit: 3000,
+      publicPath: 'icon/',
+      outputPath: 'icon/'
+    })
+    .end()
+    .end()
     .end()
     .resolve.extensions.add('.ts')
     .add('.js')
