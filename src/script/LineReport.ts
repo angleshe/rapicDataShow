@@ -1,5 +1,31 @@
-import Echart, { ECharts } from 'echarts';
+import Echart, { ECharts, EChartOption } from 'echarts';
 import BaseReport, { DATETYPE } from './BaseReport';
+/**
+ * @description 配置工厂参数
+ * @author angle
+ * @date 2020-05-19
+ * @interface IEChartOptionFactory
+ */
+export interface IEChartOptionFactory {
+  /**
+   * @description 标题
+   * @type {string}
+   * @memberof IEChartOptionFactory
+   */
+  title: string;
+  /**
+   * @description x轴数据
+   * @type {string[]}
+   * @memberof IEChartOptionFactory
+   */
+  x: string[];
+  /**
+   * @description 数据值
+   * @type {number[]}
+   * @memberof IEChartOptionFactory
+   */
+  y: number[];
+}
 
 /**
  * @description 折线图
@@ -93,7 +119,81 @@ class LineReport extends BaseReport {
    * @type {(ECharts | null)}
    * @memberof LineReport
    */
-  private echarts: ECharts | null = null;
+  private _echarts: ECharts | null = null;
+
+  /**
+   * @description 初始化
+   * @author angle
+   * @date 2020-05-20
+   * @private
+   * @memberof LineReport
+   */
+  private init(): void {
+    if (this.reportDom) {
+      this._echarts = Echart.init(this.reportDom);
+      this.renderData(this._initData);
+    }
+  }
+
+  /**
+   * @description 配置工厂
+   * @author angle
+   * @date 2020-05-20
+   * @private
+   * @param {IEChartOptionFactory} option 配置项
+   * @returns {EChartOption} 生成配置
+   * @memberof LineReport
+   */
+  private _eChartOptionFactory(option: IEChartOptionFactory): EChartOption {
+    return {
+      ...option,
+      title: {
+        text: option.title,
+        textStyle: {
+          color: '#fff'
+        }
+      },
+      xAxis: {
+        data: option.x,
+        boundaryGap: false,
+        axisPointer: {
+          show: true,
+          lineStyle: {
+            type: 'dashed'
+          }
+        },
+        axisLabel: {
+          color: '#fff'
+        }
+      },
+      yAxis: {
+        axisLabel: {
+          color: '#fff'
+        }
+      },
+      dataZoom: [
+        {
+          type: 'slider',
+          realtime: true,
+          start: 0,
+          end: 50,
+          zoomLock: true
+        }
+      ],
+      tooltip: {
+        show: true,
+        axisPointer: {
+          show: true
+        }
+      },
+      series: [
+        {
+          type: 'line',
+          data: option.y
+        }
+      ]
+    };
+  }
 
   /**
    *Creates an instance of LineReport.
@@ -112,9 +212,9 @@ class LineReport extends BaseReport {
   }
 
   public renderData(data: number[]): void {
-    if (this.echarts) {
-      this.echarts.setOption(
-        this.eChartOptionFactory({
+    if (this._echarts) {
+      this._echarts.setOption(
+        this._eChartOptionFactory({
           title: this._title,
           x: (this.type === DATETYPE.YEAR ? this._monthLabel : this._dayLabel).slice(
             0,
@@ -123,20 +223,6 @@ class LineReport extends BaseReport {
           y: data
         })
       );
-    }
-  }
-
-  /**
-   * @description 初始化
-   * @author angle
-   * @date 2020-05-20
-   * @private
-   * @memberof LineReport
-   */
-  private init(): void {
-    if (this.reportDom) {
-      this.echarts = Echart.init(this.reportDom);
-      this.renderData(this._initData);
     }
   }
 }

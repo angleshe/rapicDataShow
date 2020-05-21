@@ -1,38 +1,4 @@
-import { EChartOption } from 'echarts';
 import $ from 'jquery';
-
-/**
- * @description 配置工厂参数
- * @author angle
- * @date 2020-05-19
- * @interface IEChartOptionFactory
- */
-export interface IEChartOptionFactory {
-  /**
-   * @description 标题
-   * @type {string}
-   * @memberof IEChartOptionFactory
-   */
-  title: string;
-  /**
-   * @description x轴数据
-   * @type {string[]}
-   * @memberof IEChartOptionFactory
-   */
-  x: string[];
-  /**
-   * @description 图表类型/默认折线图
-   * @type {string}
-   * @memberof IEChartOptionFactory
-   */
-  reportType?: string;
-  /**
-   * @description 数据值
-   * @type {number[]}
-   * @memberof IEChartOptionFactory
-   */
-  y: number[];
-}
 
 /**
  * @description 日期类型
@@ -47,7 +13,11 @@ export enum DATETYPE {
   /**
    * 月
    */
-  MONTH = 'month'
+  MONTH = 'months',
+  /**
+   * 日
+   */
+  DAY = 'days'
 }
 
 /**
@@ -99,20 +69,32 @@ abstract class BaseReport<DataType = number> {
    */
   private initComponent(): void {
     const date: Date = new Date();
-    this._dateInpJqDom
-      ?.val(
-        this.type === DATETYPE.YEAR
-          ? date.getFullYear()
-          : `${date.getFullYear()}-${date.getMonth() + 1}`
-      )
-      .datepicker({
-        maxViewMode: this.type === DATETYPE.YEAR ? 'years' : 'months',
-        minViewMode: this.type === DATETYPE.YEAR ? 'years' : 'months',
-        startView: this.type === DATETYPE.YEAR ? 'years' : 'months',
-        format: this.type === DATETYPE.YEAR ? 'yyyy' : 'yyyy-MM',
-        autoclose: true,
-        endDate: date
-      });
+    let dateshow: string = '';
+    let format: string = '';
+    if (this.type === DATETYPE.YEAR) {
+      dateshow = date.getFullYear().toString();
+      format = 'yyyy';
+    } else if (this.type === DATETYPE.MONTH) {
+      const month: number = date.getMonth() + 1;
+      dateshow = `${date.getFullYear()}-${month > 9 ? month.toString() : `0${month}`}`;
+      format = 'yyyy-mm';
+    } else if (this.type === DATETYPE.DAY) {
+      const month: number = date.getMonth() + 1;
+      const day: number = date.getDay();
+      dateshow = `${date.getFullYear()}-${month > 9 ? month.toString() : `0${month}`}-${
+        day > 9 ? day : '0' + day
+      }`;
+      format = 'yyyy-mm-dd';
+    }
+
+    this._dateInpJqDom?.val(dateshow).datepicker({
+      maxViewMode: this.type,
+      minViewMode: this.type,
+      startView: this.type,
+      format,
+      autoclose: true,
+      endDate: date
+    });
   }
 
   /**
@@ -172,68 +154,6 @@ abstract class BaseReport<DataType = number> {
     if (events === 'changeDate' && fn) {
       this._dateInpJqDom?.off('changeDate', fn);
     }
-  }
-
-  /**
-   * @description 配置工厂
-   * @author angle
-   * @date 2020-05-20
-   * @protected
-   * @param {IEChartOptionFactory} option 配置项
-   * @returns {EChartOption} 生成配置
-   * @memberof BaseReport
-   * @example
-   *   this.eChartOptionFactory(arg)
-   */
-  protected eChartOptionFactory(option: IEChartOptionFactory): EChartOption {
-    return {
-      ...option,
-      title: {
-        text: option.title,
-        textStyle: {
-          color: '#fff'
-        }
-      },
-      xAxis: {
-        data: option.x,
-        boundaryGap: false,
-        axisPointer: {
-          show: true,
-          lineStyle: {
-            type: 'dashed'
-          }
-        },
-        axisLabel: {
-          color: '#fff'
-        }
-      },
-      yAxis: {
-        axisLabel: {
-          color: '#fff'
-        }
-      },
-      dataZoom: [
-        {
-          type: 'slider',
-          realtime: true,
-          start: 0,
-          end: 50,
-          zoomLock: true
-        }
-      ],
-      tooltip: {
-        show: true,
-        axisPointer: {
-          show: true
-        }
-      },
-      series: [
-        {
-          type: option.reportType ?? 'line',
-          data: option.y
-        }
-      ]
-    };
   }
 
   /**

@@ -1,12 +1,14 @@
 import '../icon/iconfont.css';
-import '../reset.scss';
+import 'bootstrap/scss/bootstrap.scss';
 import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
+import '../reset.scss';
 import '../index.scss';
 import 'bootstrap';
 import 'bootstrap-datepicker';
 import $ from 'jquery';
 import LineReport from './LineReport';
 import { DATETYPE } from './BaseReport';
+import BlockBar, { IAchievement } from './BlockBar';
 
 /**
  * @description 生成随机数
@@ -73,6 +75,23 @@ function testDataFactory(date: Date = new Date(), type: DATETYPE = DATETYPE.YEAR
     ),
     () => randomNum(99, 999)
   );
+}
+
+/**
+ * @description 业绩测试数据生产工厂
+ * @author angle
+ * @date 2020-05-20
+ * @returns {IAchievement[]}
+ */
+function testAchievemenDataFactory(): IAchievement[] {
+  return Array.from<undefined, IAchievement>(Array<undefined>(24), () => ({
+    orderNumber: randomNum(99, 999),
+    platformDiscount: randomNum(99, 999),
+    sendDistance: randomNum(99, 999),
+    sendPrice: randomNum(99, 999),
+    shopDiscount: randomNum(99, 999),
+    subsidy: randomNum(99, 999)
+  }));
 }
 
 $(() => {
@@ -143,5 +162,14 @@ $(() => {
   });
   monthSend.addEventListener('changeDate', (ev) => {
     monthSend.renderData(testDataFactory(ev.date, DATETYPE.MONTH));
+  });
+
+  const achievemen: BlockBar = new BlockBar(
+    'achievement-inp',
+    'achievement-report',
+    testAchievemenDataFactory()
+  );
+  achievemen.addEventListener('changeDate', () => {
+    achievemen.renderData(testAchievemenDataFactory());
   });
 });
