@@ -9,6 +9,16 @@ import $ from 'jquery';
 import LineReport from './LineReport';
 import { DATETYPE } from './BaseReport';
 import BlockBar, { IAchievement } from './BlockBar';
+import MapReport from './MapReport';
+import MalaysiaMapData from './Malaysia.json';
+
+interface IMapData {
+  name: string;
+  orderNumber: number;
+  couponTotal: number;
+  subsidyTotal: number;
+  sendPrice: number;
+}
 
 /**
  * @description 生成随机数
@@ -94,6 +104,22 @@ function testAchievemenDataFactory(): IAchievement[] {
   }));
 }
 
+/**
+ * @description 地图测试数据生产工厂
+ * @author angle
+ * @date 2020-05-21
+ * @returns {IMapData[]}
+ */
+function testMapDataFactory(): IMapData[] {
+  return MalaysiaMapData.features.map<IMapData>((item) => ({
+    name: item.properties.name ?? '',
+    couponTotal: randomNum(99, 999),
+    orderNumber: randomNum(99, 999),
+    sendPrice: randomNum(99, 999),
+    subsidyTotal: randomNum(99, 999)
+  }));
+}
+
 $(() => {
   const date: Date = new Date();
   const yearOrder: LineReport = new LineReport('year-order-inp', 'year-order-report', {
@@ -172,4 +198,70 @@ $(() => {
   achievemen.addEventListener('changeDate', () => {
     achievemen.renderData(testAchievemenDataFactory());
   });
+
+  const mapDataDom: {
+    orderNumber: HTMLDivElement | null;
+    couponTotal: HTMLDivElement | null;
+    subsidyTotal: HTMLDivElement | null;
+    sendPrice: HTMLDivElement | null;
+  } = {
+    couponTotal: document.querySelector<HTMLDivElement>('.order-count'),
+    orderNumber: document.querySelector<HTMLDivElement>('.coupon-count'),
+    sendPrice: document.querySelector<HTMLDivElement>('.subsidy'),
+    subsidyTotal: document.querySelector<HTMLDivElement>('.send-price')
+  };
+
+  function setMapDataShow(data: IMapData) {
+    if (mapDataDom.couponTotal) {
+      mapDataDom.couponTotal.innerText = data.couponTotal.toString();
+    }
+    if (mapDataDom.orderNumber) {
+      mapDataDom.orderNumber.innerText = data.orderNumber.toString();
+    }
+    if (mapDataDom.sendPrice) {
+      mapDataDom.sendPrice.innerText = data.sendPrice.toString();
+    }
+    if (mapDataDom.subsidyTotal) {
+      mapDataDom.subsidyTotal.innerText = data.subsidyTotal.toString();
+    }
+  }
+
+  const mapTestData: IMapData[] = testMapDataFactory();
+  const totalMapData: IMapData = mapTestData.reduce<IMapData>(
+    (prev, curr) => ({
+      couponTotal: prev.couponTotal + curr.couponTotal,
+      orderNumber: prev.orderNumber + curr.orderNumber,
+      sendPrice: prev.sendPrice + curr.sendPrice,
+      subsidyTotal: prev.subsidyTotal + curr.subsidyTotal,
+      name: '全国'
+    }),
+    {
+      couponTotal: 0,
+      orderNumber: 0,
+      sendPrice: 0,
+      subsidyTotal: 0,
+      name: ''
+    }
+  );
+
+  const positionBtn: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>(
+    '.position-btn'
+  );
+
+  positionBtn?.addEventListener('click', () => {
+    setMapDataShow(totalMapData);
+  });
+  const mapReport: MapReport = new MapReport<IMapData & { value: number }>(
+    'map',
+    mapTestData.map<IMapData & { value: number }>((item) => ({
+      ...item,
+      value: item.orderNumber
+    }))
+  );
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  mapReport.addEventListener('click', (e: any) => {
+    setMapDataShow(e.data);
+  });
+
+  setMapDataShow(totalMapData);
 });

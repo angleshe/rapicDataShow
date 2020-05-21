@@ -11,7 +11,29 @@
   <body>
     <div class="report">
       <div class="main-container">
-        <div class="left-container report-block map-report">订单分布</div>
+        <div class="left-container report-block map-report">
+          <div class="block-title">订单分布</div>
+          <div class="map-header">
+            <button type="button" class="position-btn"><i class="iconfont iconweizhi"></i><span class="label">全国</span></button>
+            <div class="data-block">
+              <div class="number order-count">0</div>
+              <div class="label">订单总数</div>
+            </div>
+            <div class="data-block">
+              <div class="number coupon-count">0</div>
+              <div class="label">优惠券总额</div>
+            </div>
+            <div class="data-block">
+              <div class="number subsidy">0</div>
+              <div class="label">补贴总额</div>
+            </div>
+            <div class="data-block">
+              <div class="number send-price">0</div>
+              <div class="label">寄送费总额</div>
+            </div>
+          </div>
+          <div id="map"></div>
+        </div>
         <div class="right-container">
           <div class="line">
             <div class="report-block line-report">
@@ -52,9 +74,9 @@
         </div>
       </div>
       <div class="main-container">
-        <div class="left-container report-block map-report">
+        <div class="left-container report-block bar-report">
           <div id="achievement-report">
-            <div class="table-title">每日业绩统计</div>
+            <div class="block-title">每日业绩统计</div>
             <ul class="table-head">
               <li class="box-label report-box">分时订单数量</li>
               <li class="box-label">平台优惠总额</li>

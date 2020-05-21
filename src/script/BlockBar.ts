@@ -77,9 +77,9 @@ class BlockBar extends BaseReport<IAchievement> {
   private _footerDom: HTMLUListElement | null = null;
 
   /**
-   * @description
+   * @description 图表处理对象
    * @private
-   * @type {(ECharts | null)} 图表处理对象
+   * @type {(ECharts | null)}
    * @memberof BlockBar
    */
   private _echarts: ECharts | null = null;

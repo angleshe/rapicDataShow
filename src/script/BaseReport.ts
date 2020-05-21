@@ -153,6 +153,7 @@ abstract class BaseReport<DataType = number> {
       handler ?? this._changeDateHandler;
     if (events === 'changeDate' && fn) {
       this._dateInpJqDom?.off('changeDate', fn);
+      this._changeDateHandler = undefined;
     }
   }
 
