@@ -145,10 +145,14 @@ class BlockBar extends BaseReport<IAchievement> {
         {
           type: 'bar',
           data: data.reverse(),
-          barWidth: 25
-          // label: {
-          //   show: true
-          // }
+          barWidth: 25,
+          itemStyle: {
+            color: new Echart.graphic.LinearGradient(0, 0, 1, 1, [
+              { offset: 0, color: '#306b87' },
+              { offset: 1, color: '#27544b' }
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ]) as any
+          }
         }
       ],
       grid: {

@@ -25,6 +25,12 @@ export interface IEChartOptionFactory {
    * @memberof IEChartOptionFactory
    */
   y: number[];
+  /**
+   * @description 折线颜色
+   * @type {string}
+   * @memberof IEChartOptionFactory
+   */
+  lineColor?: string;
 }
 
 /**
@@ -48,6 +54,13 @@ export interface ILineReportOption {
    * @memberof ILineReportOption
    */
   title: string;
+
+  /**
+   * @description 折线颜色
+   * @type {string}
+   * @memberof ILineReportOption
+   */
+  lineColor?: string;
 
   /**
    * @description 初始数据
@@ -112,6 +125,14 @@ class LineReport extends BaseReport {
    * @memberof LineReport
    */
   private readonly _title: string;
+
+  /**
+   * @description 折线颜色
+   * @private
+   * @type {(string | undefined)}
+   * @memberof LineReport
+   */
+  private readonly _lineColor: string | undefined;
 
   /**
    * @description 图表处理对象
@@ -189,7 +210,14 @@ class LineReport extends BaseReport {
       series: [
         {
           type: 'line',
-          data: option.y
+          data: option.y,
+          lineStyle: {
+            color: option.lineColor
+          },
+          itemStyle: {
+            color: option.lineColor,
+            borderColor: option.lineColor
+          }
         }
       ]
     };
@@ -204,10 +232,15 @@ class LineReport extends BaseReport {
    * @param {ILineReportOption} { type, initData, title } 配置项
    * @memberof LineReport
    */
-  constructor(dateInpId: string, reportId: string, { type, initData, title }: ILineReportOption) {
+  constructor(
+    dateInpId: string,
+    reportId: string,
+    { type, initData, title, lineColor }: ILineReportOption
+  ) {
     super(dateInpId, reportId, type ?? DATETYPE.YEAR);
     this._initData = initData ?? [];
     this._title = title;
+    this._lineColor = lineColor;
     this.init();
   }
 
@@ -216,6 +249,7 @@ class LineReport extends BaseReport {
       this._echarts.setOption(
         this._eChartOptionFactory({
           title: this._title,
+          lineColor: this._lineColor,
           x: (this.type === DATETYPE.YEAR ? this._monthLabel : this._dayLabel).slice(
             0,
             data.length

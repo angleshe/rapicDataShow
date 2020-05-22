@@ -1,11 +1,11 @@
 import '../icon/iconfont.css';
+import $ from 'jquery';
 import 'bootstrap/scss/bootstrap.scss';
 import 'bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css';
 import '../reset.scss';
 import '../index.scss';
 import 'bootstrap';
 import 'bootstrap-datepicker';
-import $ from 'jquery';
 import LineReport from './LineReport';
 import { DATETYPE } from './BaseReport';
 import BlockBar, { IAchievement } from './BlockBar';
@@ -124,7 +124,8 @@ $(() => {
   const date: Date = new Date();
   const yearOrder: LineReport = new LineReport('year-order-inp', 'year-order-report', {
     title: '年度订单分布图',
-    initData: testDataFactory()
+    initData: testDataFactory(),
+    lineColor: '#FF0000'
   });
   yearOrder.addEventListener('changeDate', (ev) => {
     yearOrder.renderData(testDataFactory(ev.date));
@@ -133,7 +134,8 @@ $(() => {
   const monthOrder: LineReport = new LineReport('month-order-inp', 'month-order-report', {
     title: '每月订单分布图',
     initData: testDataFactory(date, DATETYPE.MONTH),
-    type: DATETYPE.MONTH
+    type: DATETYPE.MONTH,
+    lineColor: '#1E90FF'
   });
   monthOrder.addEventListener('changeDate', (ev) => {
     monthOrder.renderData(testDataFactory(ev.date, DATETYPE.MONTH));
@@ -141,7 +143,8 @@ $(() => {
 
   const yearSubsidy: LineReport = new LineReport('year-subsidy-inp', 'year-subsidy-report', {
     title: '年度补贴总额统计',
-    initData: testDataFactory()
+    initData: testDataFactory(),
+    lineColor: '#00FFFF'
   });
   yearSubsidy.addEventListener('changeDate', (ev) => {
     yearSubsidy.renderData(testDataFactory(ev.date));
@@ -150,7 +153,8 @@ $(() => {
   const monthSubsidy: LineReport = new LineReport('month-subsidy-inp', 'month-subsidy-report', {
     title: '每月补贴总额统计',
     initData: testDataFactory(date, DATETYPE.MONTH),
-    type: DATETYPE.MONTH
+    type: DATETYPE.MONTH,
+    lineColor: '#FFA500'
   });
   monthSubsidy.addEventListener('changeDate', (ev) => {
     monthSubsidy.renderData(testDataFactory(ev.date, DATETYPE.MONTH));
@@ -158,7 +162,8 @@ $(() => {
 
   const yearCoupon: LineReport = new LineReport('year-coupon-inp', 'year-coupon-report', {
     title: '年度优惠总额统计',
-    initData: testDataFactory()
+    initData: testDataFactory(),
+    lineColor: '#A0522D'
   });
   yearCoupon.addEventListener('changeDate', (ev) => {
     yearCoupon.renderData(testDataFactory(ev.date));
@@ -167,7 +172,8 @@ $(() => {
   const monthCoupon: LineReport = new LineReport('month-coupon-inp', 'month-coupon-report', {
     title: '每月优惠总额统计',
     initData: testDataFactory(date, DATETYPE.MONTH),
-    type: DATETYPE.MONTH
+    type: DATETYPE.MONTH,
+    lineColor: '#8A2BE2'
   });
   monthCoupon.addEventListener('changeDate', () => {
     monthCoupon.renderData(testDataFactory(date, DATETYPE.MONTH));
@@ -211,7 +217,7 @@ $(() => {
     subsidyTotal: document.querySelector<HTMLDivElement>('.send-price')
   };
 
-  function setMapDataShow(data: IMapData) {
+  function setMapDataShow(data: IMapData): void {
     if (mapDataDom.couponTotal) {
       mapDataDom.couponTotal.innerText = data.couponTotal.toString();
     }

@@ -73,12 +73,38 @@ export default function (env: undefined | string): Configuration | Configuration
     .end()
     .end()
     .end()
+
     .resolve.extensions.add('.ts')
     .add('.js')
     .add('.json')
     .end()
     .end()
+
     .devtool(isProduction ? 'hidden-source-map' : 'inline-source-map')
+
+    .optimization.splitChunks({
+      cacheGroups: {
+        jq: {
+          test: /[\\/]node_modules[\\/]jquery[\\/]/,
+          name: 'jq',
+          chunks: 'all',
+          reuseExistingChunk: true
+        },
+        bootstrap: {
+          test: /[\\/]node_modules[\\/]bootstrap[\\/]/,
+          name: 'bootstrap',
+          chunks: 'all',
+          reuseExistingChunk: true
+        },
+        datepicker: {
+          test: /[\\/]node_modules[\\/]bootstrap\-datepicker[\\/]/,
+          name: 'datepicker',
+          chunks: 'all',
+          reuseExistingChunk: true
+        }
+      }
+    })
+    .end()
     .devServer.hot(true)
     .before((app, server, compiler) => {
       compiler.hooks.done.tap('done', () => {
