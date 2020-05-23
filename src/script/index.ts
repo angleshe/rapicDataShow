@@ -250,23 +250,50 @@ $(() => {
     }
   );
 
-  const positionBtn: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>(
-    '.position-btn'
-  );
-
-  positionBtn?.addEventListener('click', () => {
-    setMapDataShow(totalMapData);
-  });
   const mapReport: MapReport = new MapReport<IMapData & { value: number }>(
     'map',
+    'address-select-group',
     mapTestData.map<IMapData & { value: number }>((item) => ({
       ...item,
       value: item.orderNumber
     }))
   );
+  const positionBtn: HTMLButtonElement | null = document.querySelector<HTMLButtonElement>(
+    '.position-btn'
+  );
+  positionBtn?.addEventListener('click', () => {
+    setMapDataShow(totalMapData);
+    mapReport.refreshSelect();
+  });
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  mapReport.addEventListener('click', (e: any) => {
-    setMapDataShow(e.data);
+  mapReport.addEventListener('addresschange', (data: any) => {
+    if (data.value === undefined) {
+      // 区
+      setMapDataShow({
+        name: '',
+        couponTotal: randomNum(99, 999),
+        orderNumber: randomNum(99, 999),
+        sendPrice: randomNum(99, 999),
+        subsidyTotal: randomNum(99, 999)
+      });
+    } else {
+      // 州
+      setMapDataShow(data);
+      mapReport.renderAreaMenu([
+        {
+          name: '地区1',
+          value: 'area1'
+        },
+        {
+          name: '地区2',
+          value: 'area2'
+        },
+        {
+          name: '地区3',
+          value: 'area3'
+        }
+      ]);
+    }
   });
 
   setMapDataShow(totalMapData);

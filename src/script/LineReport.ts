@@ -176,7 +176,7 @@ class LineReport extends BaseReport {
       },
       xAxis: {
         data: option.x,
-        boundaryGap: false,
+        boundaryGap: this.type === DATETYPE.YEAR,
         axisPointer: {
           show: true,
           lineStyle: {
@@ -197,7 +197,7 @@ class LineReport extends BaseReport {
           type: 'slider',
           realtime: true,
           start: 0,
-          end: 50,
+          end: this.type === DATETYPE.YEAR ? undefined : 50,
           zoomLock: true
         }
       ],
@@ -209,7 +209,8 @@ class LineReport extends BaseReport {
       },
       series: [
         {
-          type: 'line',
+          type: this.type === DATETYPE.YEAR ? 'bar' : 'line',
+          barWidth: this.type === DATETYPE.YEAR ? 20 : undefined,
           data: option.y,
           lineStyle: {
             color: option.lineColor

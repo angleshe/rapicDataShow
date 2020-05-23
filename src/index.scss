@@ -10,7 +10,7 @@
 
   .main-container {
     display: flex;
-    min-height: 900px;
+    min-height: 600px;
 
     &:not(:nth-last-child(1)) {
       margin-bottom: $space;
@@ -124,8 +124,23 @@
         }
       }
 
+      #address-select-group {
+        display: flex;
+        margin-top: 20px;
+
+        .dropdown {
+          margin-right: 20px;
+
+          .address-select-btn {
+            width: 180px;
+            color: #fff;
+            background-color: #449ba8;
+          }
+        }
+      }
+
       #map {
-        height: 800px;
+        height: 600px;
       }
     }
 
