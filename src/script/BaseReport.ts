@@ -88,7 +88,7 @@ abstract class BaseReport<DataType = number> {
     }
 
     this._dateInpJqDom?.val(dateshow).datepicker({
-      maxViewMode: this.type,
+      maxViewMode: 'years',
       minViewMode: this.type,
       startView: this.type,
       format,
