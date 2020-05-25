@@ -14,7 +14,7 @@ export default function (env: undefined | string): Configuration | Configuration
     .add('./src/script/index.ts')
     .end()
     .output.path(path.resolve(__dirname, 'dist'))
-    .publicPath('/')
+    .publicPath('./')
     .filename('script/[name].bundle.js')
     .end()
     .module.rule('ts')
